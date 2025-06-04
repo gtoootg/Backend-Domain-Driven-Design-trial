@@ -1,8 +1,13 @@
-﻿namespace App.Domain.Model.User;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace App.Domain.Model.User;
 
 public class UserEntity
 {
-    public Guid Id { get; private set; } 
+     [Key]
+     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; private set; } 
 
     public string UserName { get; private set; } = null!;
     

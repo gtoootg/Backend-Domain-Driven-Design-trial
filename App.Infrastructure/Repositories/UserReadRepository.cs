@@ -17,7 +17,7 @@ namespace App.Infrastructure.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<UserReadModel?> GetByIdAsync(Guid id)
+        public async Task<UserReadModel?> GetByIdAsync(int id)
         {
             var entity = await _context.Users
                 .AsNoTracking()

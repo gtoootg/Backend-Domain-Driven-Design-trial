@@ -1,7 +1,7 @@
 namespace App.Domain.Model.User;
 
 public record UserReadModel(
-    Guid Id,
+    int Id,
     string UserName,
     string LastName,
     string FirstName,
