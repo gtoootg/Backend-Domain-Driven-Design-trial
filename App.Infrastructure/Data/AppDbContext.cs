@@ -23,10 +23,10 @@ namespace App.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new UserEntityMap());
             
             // Seed countries first
-            var countries = CountryFixture.GetCountries();
-            
-            modelBuilder.Entity<CountryEntity>().HasData(countries);
-            UserFixture.SeedUsers(modelBuilder, countries);
+            // var countries = CountryFixture.GetCountries();
+            //
+            // modelBuilder.Entity<CountryEntity>().HasData(countries);
+            // UserFixture.SeedUsers(modelBuilder, countries);
         }
     }
 }
