@@ -21,31 +21,12 @@ namespace App.Infrastructure.Data
 
             // Apply configurations
             modelBuilder.ApplyConfiguration(new UserEntityMap());
-
-            // Configure CountryEntity
-            // modelBuilder.Entity<CountryEntity>(entity =>
-            // {
-            //     entity.ToTable("Countries");
-            //     entity.HasKey(c => c.Id);
-            //     entity.Property(c => c.CountryCode)
-            //         .IsRequired()
-            //         .HasMaxLength(10);
-            //     entity.HasIndex(c => c.CountryCode)
-            //         .IsUnique();
-            //     entity.Property(c => c.Name)
-            //         .IsRequired()
-            //         .HasMaxLength(100);
-            // });
-
+            
             // Seed countries first
             var countries = CountryFixture.GetCountries();
+            
             modelBuilder.Entity<CountryEntity>().HasData(countries);
-
-            // Then seed users with the country relationships
             UserFixture.SeedUsers(modelBuilder, countries);
-
-            // Ensure the database is created with the latest model
-            Database.EnsureCreated();
         }
     }
 }

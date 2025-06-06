@@ -23,7 +23,7 @@ builder.Services.AddMediatR(cfg =>
 
 // Register repositories
 builder.Services.AddScoped<IUserReadRepository, UserReadRepository>();
-    
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
