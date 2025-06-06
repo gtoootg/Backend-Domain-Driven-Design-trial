@@ -3,6 +3,7 @@ using App.Infrastructure.Persistence;
 using App.Domain.Model.User;
 using App.Infrastructure.Repositories;
 using App.Api.Endpoints;
+using App.Infrastructure.Data;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);

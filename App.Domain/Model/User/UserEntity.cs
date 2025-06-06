@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Domain.Model.Country;
 
 namespace App.Domain.Model.User;
 
@@ -7,13 +8,19 @@ public class UserEntity
 {
      [Key]
      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; private set; } 
+    public int Id { get; set; } 
 
-    public string UserName { get; private set; } = null!;
+    public string UserName { get; set; } = null!;
     
-    public string LastName { get; private set; } = null!;
+    public string LastName { get; set; } = null!;
     
-    public string FirstName { get; private set; } = null!;
+    public string FirstName { get; set; } = null!;
 
-    public string Email { get; private set; } = null!;
+    public string Email { get; set; } = null!;
+    
+    public int CountryId { get; set; }
+    
+    public CountryEntity Country { get; set; } = null!;
+    
+    public string CountryCode => Country.CountryCode;
 }

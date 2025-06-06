@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Domain.Model.User;
+using App.Infrastructure.Data;
 using App.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
