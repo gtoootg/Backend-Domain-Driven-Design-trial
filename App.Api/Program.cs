@@ -66,6 +66,8 @@ using (var scope = app.Services.CreateScope())
         if (seed)
         {
             Console.WriteLine("Seeding database...");
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             await FixtureManager.SeedAllAsync(context);
             Console.WriteLine("Database seeding completed.");
         }

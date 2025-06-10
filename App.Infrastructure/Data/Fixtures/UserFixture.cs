@@ -20,11 +20,11 @@ public class UserFixture : IFixture
 
         var users = new List<UserEntity>
         {
-            new() { UserName = "suzuki.ichiro", FirstName = "Ichiro", LastName = "Suzuki", Email = "suzuki.ichiro@example.com", Country = us }, // NOTE: This is a Japanese name, but we're using US as the default country code for simplicity", LastName = "Doe", Email = "john.doe@example.com", Country = us },
-            new() { UserName = "taro.yamada", FirstName = "Taro", LastName = "Yamada", Email = "taro.yamada@example.com", Country = jp },
-            new() { UserName = "hans.mueller", FirstName = "Hans", LastName = "Müller", Email = "hans.mueller@example.com", Country = de },
-            new() { UserName = "emily.smith", FirstName = "Emily", LastName = "Smith", Email = "emily.smith@example.com", Country = gb },
-            new() { UserName = "sophie.martin", FirstName = "Sophie", LastName = "Martin", Email = "sophie.martin@example.com", Country = fr }
+            new() { UserName = "suzuki.jiro", FirstName = "Ichiro", LastName = "Suzuki", Email = "suzuki.ichiro@example.com", Country = us, CreatedAt =  DateTime.UtcNow}, // NOTE: This is a Japanese name, but we're using US as the default country code for simplicity", LastName = "Doe", Email = "john.doe@example.com", Country = us },
+            new() { UserName = "taro.yamada", FirstName = "Taro", LastName = "Yamada", Email = "taro.yamada@example.com", Country = jp, CreatedAt =  DateTime.UtcNow },
+            new() { UserName = "hans.mueller", FirstName = "Hans", LastName = "Müller", Email = "hans.mueller@example.com", Country = de , CreatedAt =  DateTime.UtcNow},
+            new() { UserName = "emily.smith", FirstName = "Emily", LastName = "Smith", Email = "emily.smith@example.com", Country = gb, CreatedAt =  DateTime.UtcNow },
+            new() { UserName = "sophie.martin", FirstName = "Sophie", LastName = "Martin", Email = "sophie.martin@example.com", Country = fr , CreatedAt =  DateTime.UtcNow}
         };
 
         await context.Users.AddRangeAsync(users);

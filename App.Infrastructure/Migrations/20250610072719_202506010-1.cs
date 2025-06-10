@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace App.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class _20250606 : Migration
+    public partial class _2025060101 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +19,10 @@ namespace App.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    CountryCode = table.Column<string>(type: "text", nullable: false)
+                    CountryCode = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,7 +39,10 @@ namespace App.Infrastructure.Migrations
                     LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    CountryId = table.Column<int>(type: "integer", nullable: false)
+                    CountryId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,30 +53,6 @@ namespace App.Infrastructure.Migrations
                         principalTable: "Countries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Countries",
-                columns: new[] { "Id", "CountryCode", "Name" },
-                values: new object[,]
-                {
-                    { 1, "US", "United States" },
-                    { 2, "JP", "Japan" },
-                    { 3, "DE", "Germany" },
-                    { 4, "GB", "United Kingdom" },
-                    { 5, "FR", "France" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "CountryId", "Email", "FirstName", "LastName", "UserName" },
-                values: new object[,]
-                {
-                    { 1, 1, "john.doe@example.com", "John", "Doe", "johndoe" },
-                    { 2, 2, "taro.yamada@example.com", "Taro", "Yamada", "taro.yamada" },
-                    { 3, 3, "hans.mueller@example.com", "Hans", "Müller", "hans.mueller" },
-                    { 4, 4, "emily.smith@example.com", "Emily", "Smith", "emily.smith" },
-                    { 5, 5, "sophie.martin@example.com", "Sophie", "Martin", "sophie.martin" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,15 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Domain.Model.Common;
 using App.Domain.Model.Country;
 
 namespace App.Domain.Model.User;
 
-public class UserEntity
+public class UserEntity: BaseEntity
 {
-     [Key]
-     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; } 
-
     public string UserName { get; set; } = null!;
     
     public string LastName { get; set; } = null!;
