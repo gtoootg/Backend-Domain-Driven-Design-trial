@@ -18,7 +18,11 @@ public class PasswordValue: ValueObject
         PasswordHash = BCrypt.Net.BCrypt.HashPassword(password.Trim(), workFactor: _bCryptWorkFactor);
         Password = password;
     }
-
+    
+    public bool VerifyPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.Verify(Password, PasswordHash);
+    }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

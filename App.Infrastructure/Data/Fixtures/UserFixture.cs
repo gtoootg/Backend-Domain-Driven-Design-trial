@@ -18,13 +18,27 @@ public class UserFixture : IFixture
         var gb = await context.Countries.FirstAsync(c => c.CountryCode == "GB");
         var fr = await context.Countries.FirstAsync(c => c.CountryCode == "FR");
 
+        var user1 = new UserEntity { UserName = "john.doe", FirstName = "John", LastName = "Doe", Email = "john.doe@example.com", Country = us, CreatedAt =  DateTime.UtcNow }; 
+        user1.SetPassword("password");
+        var user2 = new UserEntity { UserName = "jane.doe", FirstName = "Jane", LastName = "Doe", Email = "jane.doe@example.com", Country = us, CreatedAt =  DateTime.UtcNow }; 
+        user2.SetPassword("password");
+        var user3 = new UserEntity { UserName = "bob.smith", FirstName = "Bob", LastName = "Smith", Email = "bob.smith@example.com", Country = us, CreatedAt =  DateTime.UtcNow }; 
+        user3.SetPassword("password");
+        var user4 = new UserEntity { UserName = "alice.jones", FirstName = "Alice", LastName = "Jones", Email = "alice.jones@example.com", Country = us, CreatedAt =  DateTime.UtcNow }; 
+        user4.SetPassword("password");
+        var user5 = new UserEntity { UserName = "mike.wilson", FirstName = "Mike", LastName = "Wilson", Email = "mike.wilson@example.com", Country = us, CreatedAt =  DateTime.UtcNow }; 
+        user5.SetPassword("password");
+        var user6 = new UserEntity { UserName = "sarah.brown", FirstName = "Sarah", LastName = "Brown", Email = "sarah.brown@example.com", Country = us, CreatedAt =  DateTime.UtcNow }; 
+        user6.SetPassword("password");
+        
         var users = new List<UserEntity>
         {
-            new() { UserName = "suzuki.jiro", FirstName = "Ichiro", LastName = "Suzuki", Email = "suzuki.ichiro@example.com", Country = us, CreatedAt =  DateTime.UtcNow}, // NOTE: This is a Japanese name, but we're using US as the default country code for simplicity", LastName = "Doe", Email = "john.doe@example.com", Country = us },
-            new() { UserName = "taro.yamada", FirstName = "Taro", LastName = "Yamada", Email = "taro.yamada@example.com", Country = jp, CreatedAt =  DateTime.UtcNow },
-            new() { UserName = "hans.mueller", FirstName = "Hans", LastName = "Müller", Email = "hans.mueller@example.com", Country = de , CreatedAt =  DateTime.UtcNow},
-            new() { UserName = "emily.smith", FirstName = "Emily", LastName = "Smith", Email = "emily.smith@example.com", Country = gb, CreatedAt =  DateTime.UtcNow },
-            new() { UserName = "sophie.martin", FirstName = "Sophie", LastName = "Martin", Email = "sophie.martin@example.com", Country = fr , CreatedAt =  DateTime.UtcNow}
+            user1,
+            user2,
+            user3,
+            user4,
+            user5,
+            user6
         };
 
         await context.Users.AddRangeAsync(users);

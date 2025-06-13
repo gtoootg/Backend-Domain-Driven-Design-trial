@@ -1,30 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using App.Infrastructure.Persistence;
 using App.Domain.Model.User;
 using App.Infrastructure.Repositories;
 using App.Api.Endpoints;
-using App.Infrastructure.Configuration;
 using App.Infrastructure.Data;
 using App.Infrastructure.Data.Fixtures;
-using MediatR;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// コマンドライン引数をパース
 var migrate = args.Contains("--migrate");
 var seed = args.Contains("--seed");
 var resetDb = args.Contains("--reset-db");
 
-// シード設定を構成
-// builder.Services.Configure<SeedSettings>(options =>
-// {
-//     options.Enabled = seedEnabled;
-//     options.ResetDatabase = resetDb;
-// });
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -32,11 +18,9 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
-// Register MediatR
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(App.Application.Queries.Users.GetAllUsersQuery).Assembly));
 
-// Register repositories
 builder.Services.AddScoped<IUserReadRepository, UserReadRepository>();
 
 var app = builder.Build();
@@ -92,5 +76,6 @@ app.UseHttpsRedirection();
 
 // Map endpoints
 app.MapUserEndpoints();
+app.MapLoginEndpoints();
 
 app.Run();
