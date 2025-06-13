@@ -7,18 +7,11 @@ public record LoginResult(string Token);
 
 public record LoginCommand(string Email, string Password) : IRequest<LoginResult>;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
+public class LoginCommandHandler(IUserReadRepository userReadRepository) : IRequestHandler<LoginCommand, LoginResult>
 {
-    private readonly IUserReadRepository _userReadRepository;
-
-    public LoginCommandHandler(IUserReadRepository userReadRepository)
-    {
-        _userReadRepository = userReadRepository;
-    }
-
     public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userReadRepository.GetByEmailAsync(request.Email);
+        var user = await userReadRepository.GetByEmailAsync(request.Email);
         
         if(user == null)
         {
