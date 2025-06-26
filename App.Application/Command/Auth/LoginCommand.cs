@@ -1,16 +1,20 @@
 using App.Application.Auth;
 using App.Domain.Model.User;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 
 namespace App.Application.Command.Auth;
 
-public record LoginResult(string Token);
-
+public record LoginResult(string Token, string RefreshToken);
 
 public record LoginCommand(string Email, string Password) : IRequest<LoginResult>;
 
-public class LoginCommandHandler(IUserReadRepository userReadRepository, IConfiguration configuration) : IRequestHandler<LoginCommand, LoginResult>
+public class LoginCommandHandler(
+    IUserReadRepository userReadRepository, 
+    IConfiguration configuration,
+    IDistributedCache cache
+    ) : IRequestHandler<LoginCommand, LoginResult>
 {
     public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -30,6 +34,16 @@ public class LoginCommandHandler(IUserReadRepository userReadRepository, IConfig
         
         var secretKey = configuration["Jwt:Key"];
         var token = JwtTokenGenerator.GenerateToken(user.Id.ToString(), user.Email, secretKey);
-        return new LoginResult(token);
+        var refreshToken = RefreshTokenGenerator.GenerateRefreshToken();
+        var cacheKey = $"refresh_{user.Id}_{refreshToken}";
+        
+        var options = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7)
+        };
+        
+        await cache.SetStringAsync(cacheKey, user.Id.ToString(), options, cancellationToken);
+        
+        return new LoginResult(token, refreshToken);
     }
 }

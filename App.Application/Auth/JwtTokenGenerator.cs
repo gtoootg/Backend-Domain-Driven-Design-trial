@@ -22,7 +22,7 @@ public class JwtTokenGenerator
      
      var token = new JwtSecurityToken(
          claims: claims,
-         expires: DateTime.Now.AddDays(1),
+         expires: DateTime.Now.AddMinutes(1),
          signingCredentials: credentials
          );
      

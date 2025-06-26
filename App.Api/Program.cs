@@ -37,9 +37,12 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero
     };
 });
+
+builder.Services.AddDistributedMemoryCache();
 
   builder.Services.AddSwaggerGen(c =>
     {
@@ -79,22 +82,18 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
-        
-        // データベースをリセットするオプション
         if (resetDb)
         {
             Console.WriteLine("Resetting database...");
             await context.Database.EnsureDeletedAsync();
         }
         
-        // マイグレーションを実行
         if (migrate)
         {
             Console.WriteLine("Applying migrations...");
             await context.Database.MigrateAsync();
         }
         
-        // シードデータを実行
         if (seed)
         {
             Console.WriteLine("Seeding database...");
