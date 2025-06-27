@@ -1,30 +1,19 @@
+using System.Text;
 using Microsoft.EntityFrameworkCore;
-using App.Infrastructure.Persistence;
 using App.Domain.Model.User;
 using App.Infrastructure.Repositories;
 using App.Api.Endpoints;
-using App.Infrastructure.Configuration;
 using App.Infrastructure.Data;
 using App.Infrastructure.Data.Fixtures;
-using MediatR;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// コマンドライン引数をパース
 var migrate = args.Contains("--migrate");
 var seed = args.Contains("--seed");
 var resetDb = args.Contains("--reset-db");
 
-// シード設定を構成
-// builder.Services.Configure<SeedSettings>(options =>
-// {
-//     options.Enabled = seedEnabled;
-//     options.ResetDatabase = resetDb;
-// });
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -32,11 +21,57 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
-// Register MediatR
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(App.Application.Queries.Users.GetAllUsersQuery).Assembly));
 
-// Register repositories
+var jwtKey = builder.Configuration["Jwt:Key"];
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new()
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+builder.Services.AddDistributedMemoryCache();
+
+  builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new() { Title = "Your API", Version = "v1" });
+        
+        c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+            Name = "Authorization",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+            Scheme = "bearer"
+        });
+        c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+        {
+            {
+                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                    {
+                        Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] {}
+            }
+        });
+    });
+
 builder.Services.AddScoped<IUserReadRepository, UserReadRepository>();
 
 var app = builder.Build();
@@ -47,25 +82,23 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
-        
-        // データベースをリセットするオプション
         if (resetDb)
         {
             Console.WriteLine("Resetting database...");
             await context.Database.EnsureDeletedAsync();
         }
         
-        // マイグレーションを実行
         if (migrate)
         {
             Console.WriteLine("Applying migrations...");
             await context.Database.MigrateAsync();
         }
         
-        // シードデータを実行
         if (seed)
         {
             Console.WriteLine("Seeding database...");
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
             await FixtureManager.SeedAllAsync(context);
             Console.WriteLine("Database seeding completed.");
         }
@@ -84,11 +117,16 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
+  
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 
 // Map endpoints
 app.MapUserEndpoints();
+app.MapLoginEndpoints();
 
 app.Run();

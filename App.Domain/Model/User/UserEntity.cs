@@ -1,15 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Domain.Model.Common;
 using App.Domain.Model.Country;
+using App.Domain.Values;
 
 namespace App.Domain.Model.User;
 
-public class UserEntity
+public class UserEntity: BaseEntity
 {
-     [Key]
-     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; } 
-
     public string UserName { get; set; } = null!;
     
     public string LastName { get; set; } = null!;
@@ -23,4 +21,16 @@ public class UserEntity
     public CountryEntity Country { get; set; } = null!;
     
     public string CountryCode => Country.CountryCode;
+    
+    public string PasswordHash { get; set; }
+
+    public void SetPassword(string password)
+    {
+        Password = password;
+    }
+        
+    public PasswordValue Password
+    {
+        set => PasswordHash　= value.GetPasswordHash();
+    }
 }

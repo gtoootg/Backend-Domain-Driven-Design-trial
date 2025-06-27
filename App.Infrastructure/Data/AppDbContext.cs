@@ -20,13 +20,8 @@ namespace App.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             // Apply configurations
+            modelBuilder.ApplyConfiguration(new CountryEntityMap());
             modelBuilder.ApplyConfiguration(new UserEntityMap());
-            
-            // Seed countries first
-            // var countries = CountryFixture.GetCountries();
-            //
-            // modelBuilder.Entity<CountryEntity>().HasData(countries);
-            // UserFixture.SeedUsers(modelBuilder, countries);
         }
     }
 }

@@ -1,3 +1,5 @@
+using App.Domain.Values;
+
 namespace App.Domain.Model.User;
 
 public record UserReadModel(
@@ -5,7 +7,9 @@ public record UserReadModel(
     string UserName,
     string LastName,
     string FirstName,
-    string Email)
+    string Email,
+    PasswordValue PasswordHash
+    )
 {
     public static UserReadModel FromEntity(UserEntity entity)
     {
@@ -17,6 +21,8 @@ public record UserReadModel(
             entity.UserName,
             entity.LastName,
             entity.FirstName,
-            entity.Email);
+            entity.Email,
+            entity.PasswordHash
+            );
     }
 }

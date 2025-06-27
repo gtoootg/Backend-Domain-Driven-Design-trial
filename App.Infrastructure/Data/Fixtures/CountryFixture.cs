@@ -12,11 +12,11 @@ public class CountryFixture : IFixture
 
         var countries = new List<CountryEntity>
         {
-            new() { Id = 1, Name = "United States", CountryCode = "US" },
-            new() { Id = 2, Name = "Japan", CountryCode = "JP" },
-            new() { Id = 3, Name = "Germany", CountryCode = "DE" },
-            new() { Id = 4, Name = "United Kingdom", CountryCode = "GB" },
-            new() { Id = 5, Name = "France", CountryCode = "FR" }
+            new() { Id = 1, Name = "United States", CountryCode = "US", CreatedAt =  DateTime.UtcNow },
+            new() { Id = 2, Name = "Japan", CountryCode = "JP", CreatedAt =  DateTime.UtcNow },
+            new() { Id = 3, Name = "Germany", CountryCode = "DE" , CreatedAt =  DateTime.UtcNow},
+            new() { Id = 4, Name = "United Kingdom", CountryCode = "GB" , CreatedAt =  DateTime.UtcNow},
+            new() { Id = 5, Name = "France", CountryCode = "FR", CreatedAt =  DateTime.UtcNow }
         };
 
         await context.Countries.AddRangeAsync(countries);

@@ -27,6 +27,16 @@ namespace App.Infrastructure.Repositories
             return entity != null ? UserReadModel.FromEntity(entity) : null;
         }
 
+        public async Task<UserReadModel?> GetByEmailAsync(string email)
+        {
+            var lowerEmail = email.Trim().ToLower();
+            var entity = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == lowerEmail);
+
+            return entity != null ? UserReadModel.FromEntity(entity) : null;
+        }
+
         public async Task<IEnumerable<UserReadModel>> GetAllAsync()
         {
             var entities = await _context.Users
