@@ -1,4 +1,5 @@
 using System.Text;
+using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using App.Domain.Model.User;
 using App.Infrastructure.Repositories;
@@ -73,6 +74,22 @@ builder.Services.AddDistributedMemoryCache();
     });
 
 builder.Services.AddScoped<IUserReadRepository, UserReadRepository>();
+
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    var config = new AmazonS3Config
+    {
+        ServiceURL = builder.Configuration["S3:ServiceUrl"],
+        ForcePathStyle = true
+    };
+
+    return new AmazonS3Client(
+            builder.Configuration["S3:AccessKey"],
+            builder.Configuration["S3:SecretKey"],
+            config
+        );
+});
+
 
 var app = builder.Build();
 
