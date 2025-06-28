@@ -8,6 +8,8 @@ using App.Infrastructure.Data;
 using App.Infrastructure.Data.Fixtures;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using App.Infrastructure.Services;
+using App.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -90,6 +92,13 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
         );
 });
 
+// Register domain-level service for file uploads
+builder.Services.AddScoped<IFileUploader>(sp =>
+{
+    var s3 = sp.GetRequiredService<IAmazonS3>();
+    var bucketName = builder.Configuration["S3:BucketName"] ?? "uploads";
+    return new S3FileUploader(s3, bucketName);
+});
 
 var app = builder.Build();
 
@@ -145,5 +154,6 @@ app.UseHttpsRedirection();
 // Map endpoints
 app.MapUserEndpoints();
 app.MapLoginEndpoints();
+app.MapFileEndpoints();
 
 app.Run();

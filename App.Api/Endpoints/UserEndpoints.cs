@@ -10,7 +10,6 @@ public static class UserEndpoints
     {
         var group = app.MapGroup("/api/users") .RequireAuthorization();
         
-
         group.MapGet("/", async (IMediator mediator) =>
         {
             var query = new GetAllUsersQuery();
