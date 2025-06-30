@@ -1,6 +1,11 @@
 ﻿namespace App.Domain.Services;
 
+public record UploadFileAsyncResponse(
+    string Key,
+    string FileName
+);
+
 public interface IFileUploader
 {
-    Task<string> UploadAsync(Stream fileStream, string fileName);
+    Task<UploadFileAsyncResponse> UploadAsync(Stream fileStream, string fileName);
 }

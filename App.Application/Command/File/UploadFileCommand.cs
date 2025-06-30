@@ -3,7 +3,7 @@ using MediatR;
 
 namespace App.Application.Command.File;
 
-public record UploadFileResult(string FileName);
+public record UploadFileResult(string Key,string FileName);
 
 public record UploadFileCommand(Stream FileStream, string FileName) : IRequest<UploadFileResult>;
 
@@ -13,6 +13,6 @@ public class UploadFileCommandHandler(IFileUploader fileUploader) : IRequestHand
     {
         var result=  await fileUploader.UploadAsync(request.FileStream, request.FileName);
         
-        return new UploadFileResult(result);
+        return new UploadFileResult(result.Key,result.FileName);
     }
 }
