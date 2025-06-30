@@ -1,5 +1,7 @@
-﻿using Amazon.S3;
+using Amazon.S3;
 using Amazon.S3.Transfer;
+using Amazon.S3.Util;
+using Amazon.S3.Model;
 using App.Domain.Services;
 
 namespace App.Infrastructure.Services;

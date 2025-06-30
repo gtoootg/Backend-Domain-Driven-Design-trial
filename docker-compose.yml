@@ -1,18 +1,5 @@
-version: '3.8'
 
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "5000:80"   # APIの公開ポート（80番を5000番にマッピング）
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=myapp;Username=user;Password=password
-    depends_on:
-      - db
-
   db:
     image: postgres:15
     environment:
@@ -31,8 +18,11 @@ services:
     environment:
       - SERVICES=s3
       - DEBUG=1
+      - DEFAULT_REGION=eu-west-1
+      - S3_INITIAL_BUCKETS=uploads
     volumes:
-      - /localstack/data:/var/lib/localstackd
+      - ./init-scripts:/etc/localstack/init/ready.d:ro
+      - /localstack/data:/var/lib/localstack
 
 volumes:
   pgdata:

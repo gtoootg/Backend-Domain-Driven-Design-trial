@@ -1,4 +1,4 @@
-﻿using App.Application.Command.File;
+using App.Application.Command.File;
 using MediatR;
 
 namespace App.Api.Endpoints;
@@ -16,6 +16,7 @@ public static class FileEndpoints
                 var result = await mediator.Send(fileUploadCommand);
                 return Results.Ok(result);
             })
-            .WithName("UploadFile");
+            .WithName("UploadFile")
+            .DisableAntiforgery();  
     }
 }
